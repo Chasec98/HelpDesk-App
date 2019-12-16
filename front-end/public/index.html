@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+
+</head>
+<body>
+    <div id="app">
+        <v-app id="inspire">
+            <v-navigation-drawer
+              v-model="drawer"
+              mini-variant
+              :dark='dark'
+              app>
+          <v-list
+            dense
+            nav
+          >
+
+            <v-list-item
+              v-for="item in items"
+              :key="item.title"
+              @click="pageChange(item.title)"
+            >
+              <v-list-item-action>
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+    </v-navigation-drawer>
+      
+          <v-app-bar
+            app
+            color="#002939"
+            dark
+          >
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+              <v-toolbar-title>Help Desk - {{pageTitle}}</v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-text-field
+              hide-details
+              prepend-icon="mdi-magnify"
+              single-line
+              placeholder="Search"
+              ></v-text-field>
+          </v-app-bar>
+          <v-content>
+<!----------------------------DASHBOARD PAGE------------------------------------------------>
+            <v-container v-show="currentPage == 'Dashboard'">
+              <v-row>
+                <v-col>
+                  <v-card>
+                    <v-card-title>Ticket Flow</v-card-title>
+                    <v-sparkline>
+                    </v-sparkline>
+                  </v-card>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                <v-card hover :dark='dark' color="#FC3F44">
+                  <v-card-title>
+                    Tickets Over 7 Days
+                  </v-card-title>
+                  <v-data-table dense :headers="headers" :items="tickets7days" item-key="name" class="elevation-1"></v-data-table>
+                </v-card>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                <v-card hover :dark='dark'>
+                  <v-card-title>
+                    My Open Tickets
+                  </v-card-title>
+                  <v-data-table dense :headers="headers" :items="tickets" item-key="name" class="elevation-1"></v-data-table>
+                </v-card>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                <v-card hover :dark='dark'>
+                  <v-card-title>
+                    My Open Projects
+                  </v-card-title>
+                  <v-data-table dense :headers="headers" :items="projects" item-key="name" class="elevation-1"></v-data-table>
+                </v-card>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col :cols="4">
+                  <v-card :dark='dark'>
+                    <v-card-title>Closed Today</v-card-title>
+                    <v-card-text><h1>{{closedToday}}</h1></v-card-text>
+                  </v-card>
+                </v-col>
+                <v-col :cols="4">
+                  <v-card :dark='dark'>
+                    <v-card-title>Closed This Week</v-card-title>
+                    <v-card-text><h1>{{closedWeek}}</h1></v-card-text>
+                  </v-card>
+                </v-col>
+                <v-col :cols="4">
+                  <v-card :dark='dark'>
+                    <v-card-title>Closed This Month</v-card-title>
+                    <v-card-text><h1>{{closedMonth}}</h1></v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
+<!--TICKET OVERLAY-->
+            <v-overlay :value='showTicket'>
+              <v-card :dark="dark" full-width>
+                <v-card-title></v-card-title>
+                <v-container>
+                  <v-row>
+                    <v-col>
+                      <h2>Ticket #{{ticketNum}}</h2>
+                    </v-col>
+                    <v-col>
+                      <v-select :items="['Open','Closed']" label="Status"></v-select>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-text-field label="Problem"></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-textarea label="Notes"></v-textarea>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-textarea label="Solution"></v-textarea>
+                    </v-col>
+                  </v-row>
+                  <v-row aligh='end'>
+                    <v-col>
+                      <v-btn color="primary" @click="hideTicket()">Exit</v-btn>
+                      <v-btn color="primary">Save</v-btn>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card>
+            </v-overlay>
+<!--TICKET OVERLAY END-->
+<!------------------------------------DASHBOARD PAGE END/SETTING PAGE START-------------------------------------------->    
+            <v-container v-show="currentPage == 'Settings'">
+              <v-row>
+                <v-col>
+                  <v-card :dark='dark'>
+                    <v-card-title>
+                      Personal Preferences
+                    </v-card-title>
+                    <v-row>
+                      <v-col>
+                        <v-switch label="Dark Mode" value="Light"></v-switch>
+                      </v-col>
+                      <v-col>
+                        <v-switch label="Drawer Open" value="Open"></v-switch>
+                      </v-col>
+                    </v-row>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
+<!------------------------------------SETTING PAGE END/PROFILE PAGE START----------------------------------------------->  
+<v-container v-show="currentPage == 'Profile'">
+
+</v-container>
+<!------------------------------------PROFILE PAGE END------------------------------------------------------------------->
+          </v-content>
+          <v-footer
+            color="#002939"
+            app
+            inset
+          >
+            <span class="white--text">Author: Chase Carter</span></span>
+            <v-btn
+                fixed
+                dark
+                fab
+                bottom
+                right
+                color="blue"
+                @click="togglePaging()"
+              >
+                <span class="mdi " v-bind:class="{'mdi-lightbulb': inPaging, 'mdi-lightbulb-outline':!inPaging}"></span>
+              </v-btn>
+          </v-footer>
+          
+        </v-app>
+      </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>
