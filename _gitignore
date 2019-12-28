@@ -1,0 +1,4 @@
+#ignore all modules in front-end
+front-end/node_modules/*
+#ignore all modules in back-end
+back-end/node_modules/*
