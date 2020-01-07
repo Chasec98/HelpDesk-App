@@ -5,7 +5,6 @@ const stats = require('../models/tickets')
 Router.get('/numClosed', async (req, res) => {
     const result = {}
     let now = new Date()
-    try {
         now.setDate(now.getDate()-1)
         result['closed1day'] = await stats.find({
             closedAt: {
@@ -25,9 +24,6 @@ Router.get('/numClosed', async (req, res) => {
             }
         }).count() 
         res.json(result)
-    } catch {
-
-    }
 })
 
 module.exports = Router

@@ -7,7 +7,7 @@ require('dotenv').config()
 const app = express()
 
 //Connect to DB
-mongoose.connect(process.env.DATABASE_URL,{useNewUrlParser: true})
+mongoose.connect("mongodb+srv://user:user1234@cluster0-r6m4d.mongodb.net/test?retryWrites=true&w=majority",{useNewUrlParser: true})
 const db = mongoose.connection
 db.once('open',() => console.log('connected to db'))
 

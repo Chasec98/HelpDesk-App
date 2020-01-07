@@ -20,17 +20,15 @@ var vm = new Vue({
     inPaging: true,
     currentPage: 'Dashboard',
     showTicket: false,
+    loading: false,
     activeTicket: {},
-    pageTitle: 'Dashboard',
-    closedToday: '5',
-    closedWeek: '20',
-    closedMonth: '100',
+    date: new Date().toISOString().substr(0, 10),
+    menu: false,
     //API Data
     tickets: [],
     projects: [],
-    stats:[],
+    stats: [],
     //End API Data
-    loadingTickets: true,
     tickets7days: [],
     headers: [{
         text: 'Ticket Number',
@@ -42,8 +40,8 @@ var vm = new Vue({
         value: 'callerName'
       },
       {
-        text: 'Problem',
-        value: 'problem'
+        text: 'Subject',
+        value: 'subject'
       },
       {
         text: 'Age',
@@ -53,49 +51,86 @@ var vm = new Vue({
     selected: []
   },
   methods: {
+    //input is an iso timestamp and the output is a data and time string
+    getTimestamp(da) {
+      if (da === null) {
+        return ''
+      }
+      date = new Date(da)
+      st = 'AM'
+      hour = date.getHours()
+      if (hour >= 12) {
+        st = 'PM'
+      }
+      if (hour > 12) {
+        hour -= 12
+      }
+      str = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate() + 1) + " " + hour + ":" + date.getMinutes() + " " + st
+      return str
+    },
+    //changes visible containers for 'page' selection
     pageChange(page) {
       vm.currentPage = page
-      vm.pageTitle = page
     },
+    //hides ticket dialog
     hideTicket() {
       vm.showTicket = false
     },
     togglePaging() {
       vm.inPaging = !vm.inPaging
     },
+    //opens ticket dialog and loads given ticket number data to activeTicket
     openTicket(num) {
-      vm.showTicket = true
+      vm.loading = true
       axios
         .get('http://localhost:5000/api/tickets/' + num.ticketNumber)
         .then(response => {
           vm.activeTicket = response.data
+          vm.loading = false
+          vm.showTicket = true
         })
     },
+    //puts ctiveTicket to given ticket number, if no ticket number it will post which creates another ticket with incremented ticket number
     postTicket(num) {
-      axios
-        .put('http://localhost:5000/api/tickets/' + num, vm.activeTicket)
-        .then(this.hideTicket())
+      if (typeof num !== 'undefined') {
+        axios
+          .put('http://localhost:5000/api/tickets/' + num, vm.activeTicket)
+          .then(() => {
+            this.hideTicket()
+            this.loadData()
+          })
+      } else {
+        axios
+          .post('http://localhost:5000/api/tickets/', vm.activeTicket)
+          .then(() => {
+            this.hideTicket()
+            this.loadData()
+          })
+      }
     },
-    getTickets(){
+    createTicket() {
+      vm.activeTicket = {}
+      vm.showTicket = true
+    },
+    loadData() {
       axios
-      .get('http://localhost:5000/api/tickets')
-      .then(response => {
-        vm.tickets = response.data
-        vm.loadingTickets = false
-      })
+        .get('http://localhost:5000/api/tickets?project=false')
+        .then(response => {
+          vm.tickets = response.data
+        })
+      axios
+        .get('http://localhost:5000/api/stats/numClosed')
+        .then(response => {
+          vm.stats = response.data
+        })
+      axios
+        .get('http://localhost:5000/api/tickets?project=true')
+        .then(response => {
+          vm.projects = response.data
+        })
     }
   },
   mounted() {
-    axios
-      .get('http://localhost:5000/api/tickets')
-      .then(response => {
-        vm.tickets = response.data
-        vm.loadingTickets = false
-      })
-      axios
-      .get('http://localhost:5000/api/stats/numClosed')
-      .then(response => {
-        vm.stats = response.data
-      })
+    this.loadData()
   }
 })

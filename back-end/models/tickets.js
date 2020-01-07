@@ -7,7 +7,7 @@ const tickets = new mongoose.Schema({
     },
     subject: {
         type: String,
-        required: false
+        required: true
     },
     problem: {
         type: String,
@@ -38,7 +38,7 @@ const tickets = new mongoose.Schema({
     },
     assignedEng: {
         type: Number,
-        required: true
+        required: false
     },
     nextSteps: {
         type: Array,
@@ -47,6 +47,11 @@ const tickets = new mongoose.Schema({
     age: {
         type: Number,
         required: false
+    },
+    project: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 })
 

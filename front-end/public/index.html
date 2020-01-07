@@ -14,6 +14,9 @@
 <body>
   <div id="app">
     <v-app id="inspire">
+      <v-overlay :value="loading">
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+      </v-overlay>
       <v-navigation-drawer v-model="drawer" mini-variant :dark='dark' app>
         <v-list dense nav>
           <v-list-item v-for="item in items" :key="item.title" @click="pageChange(item.title)">
@@ -29,7 +32,7 @@
 
       <v-app-bar app color="#002939" dark>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title>Help Desk - {{pageTitle}}</v-toolbar-title>
+        <v-toolbar-title>Help Desk - {{currentPage}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-text-field hide-details prepend-icon="mdi-magnify" single-line placeholder="Search"></v-text-field>
       </v-app-bar>
@@ -61,7 +64,7 @@
               <v-card hover :dark="dark">
                 <v-card-title>My Open Tickets - {{tickets.open.length}}</v-card-title>
                 <v-data-table dense :headers="headers" :items="tickets.open" class="elevation-1" @click:row="openTicket"
-                  no-data-text="No open tickets" :loading="loadingTickets">
+                  no-data-text="No open tickets">
                 </v-data-table>
               </v-card>
             </v-col>
@@ -105,16 +108,29 @@
           </v-row>
         </v-container>
         <!--TICKET OVERLAY-->
-        <v-overlay :value='showTicket'>
+        <v-dialog max-width="80%" @click:outside="hideTicket()" :value='showTicket'>
           <v-card :dark="dark" full-width>
             <v-card-title></v-card-title>
             <v-container>
               <v-row>
-                <v-col>
+                <v-col v-show="activeTicket.ticketNumber">
                   <h2>Ticket #{{activeTicket.ticketNumber}}</h2>
                 </v-col>
                 <v-col>
                   <v-select :items="['Open','Closed']" label="Status"></v-select>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col v-show="activeTicket.createdAt">
+                  <h3>Created: </h3><p>{{getTimestamp(activeTicket.createdAt)}}</p>
+                  </v-col>
+                  <v-col v-show="activeTicket.closedAt">
+                    <h3>Closed: </h3><p>{{getTimestamp(activeTicket.closedAt)}}</p>
+                    </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field label="Contact" v-model="activeTicket.callerName"></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
@@ -132,35 +148,35 @@
                   <v-textarea label="Solution" v-model="activeTicket.solution"></v-textarea>
                 </v-col>
               </v-row>
-              <v-row aligh='end'>
-                <v-col>
+              <v-row>
+                <v-col align='right'>
                   <v-btn color="primary" @click="hideTicket()">Exit</v-btn>
                   <v-btn color="primary" @click="postTicket(activeTicket.ticketNumber)">Save</v-btn>
                 </v-col>
               </v-row>
             </v-container>
           </v-card>
-        </v-overlay>
+        </v-dialog>
         <!--TICKET OVERLAY END-->
         <!------------------------------------DASHBOARD PAGE END/SETTING PAGE START-------------------------------------------->
         <v-container v-show="currentPage == 'Settings'">
-          <v-row>
-            <v-col>
-              <v-card :dark='dark'>
-                <v-card-title>
-                  Personal Preferences
-                </v-card-title>
-                <v-row>
-                  <v-col>
-                    <v-switch label="Dark Mode" v-model="dark"></v-switch>
-                  </v-col>
-                  <v-col>
-                    <v-switch label="Drawer Open" value="Open"></v-switch>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-col>
-          </v-row>
+            <v-row>
+              <v-col>
+                <v-card :dark='dark'>
+                  <v-card-title>
+                    Personal Preferences
+                  </v-card-title>
+                  <v-row>
+                    <v-col>
+                      <v-switch label="Dark Mode" v-model="dark"></v-switch>
+                    </v-col>
+                    <v-col>
+                      <v-switch label="Drawer Open" value="Open"></v-switch>
+                    </v-col>
+                  </v-row>
+                </v-card>
+              </v-col>
+            </v-row>
         </v-container>
         <!------------------------------------SETTING PAGE END/PROFILE PAGE START----------------------------------------------->
         <v-container v-show="currentPage == 'Profile'">
@@ -168,12 +184,15 @@
         </v-container>
         <!------------------------------------PROFILE PAGE END------------------------------------------------------------------->
       </v-content>
-      <v-footer color="#002939" app inset>
-        <span class="white--text">Author: Chase Carter</span></span>
-        <v-btn fixed dark fab bottom right color="blue" @click="togglePaging()">
+      <v-footer color="transparent" app inset>
+        <v-btn dark fab bottom color="blue" @click="createTicket()">
+          <v-icon dark>mdi-plus</v-icon>
+        </v-btn>
+        <v-btn dark fab bottom color="blue" @click="togglePaging()">
           <span class="mdi " v-bind:class="{'mdi-lightbulb': inPaging, 'mdi-lightbulb-outline':!inPaging}"></span>
         </v-btn>
       </v-footer>
+      
 
     </v-app>
   </div>
