@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const session = require('express-session')
 require('dotenv').config()
 
 const app = express()
@@ -14,6 +15,11 @@ db.once('open',() => console.log('connected to db'))
 //Middleware
 app.use(bodyParser.json())
 app.use(cors())
+app.use(session({
+    secret: 'asd;fkljasdf;lkjasdf;kajsf',
+    resave: false,
+    saveUninitialized: false
+}))
 
 //Routes
 const tickets = require('./routes/tickets')
