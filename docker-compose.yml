@@ -4,3 +4,7 @@ services:
         build: ./back-end/.
         ports:
             - "5000:5000"
+    front:
+        build: ./front-end-prod/.
+        ports:
+            - "8080:80"
