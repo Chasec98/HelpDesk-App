@@ -5,6 +5,8 @@ import VueRouter from 'vue-router'
 import Home from '../pages/Home.vue'
 import Settings from '../pages/Settings.vue'
 import Login from '../pages/Login.vue'
+import Profile from '../pages/Profile.vue'
+import Dashboard from '../pages/Dashboard.vue'
 
 Vue.use(VueRouter)
 
@@ -25,8 +27,17 @@ const routes = [
     component: Settings
   },
   {
+    path: '/profile',
+    name: 'profile',
+    component: Profile
+  },
+  {
+    path:'/dashboard',
+    name:'dashboard',
+    component: Dashboard
+  },
+  {
     path: '*',
-    name: 'home',
     component: Home
   }
 ]

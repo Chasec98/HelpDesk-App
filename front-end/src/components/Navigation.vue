@@ -15,11 +15,14 @@
         <v-toolbar-title>Help Desk</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-text-field hide-details prepend-icon="mdi-magnify" single-line placeholder="Search"></v-text-field>
+        <v-spacer></v-spacer>
+        <v-btn @click="logout()" href='/#/login' color="blue">Logout</v-btn>
       </v-app-bar>
     </div>
 </template>
-
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+import axios from 'axios';
 export default {
     name:'Navigation',
     data: ()=>({
@@ -45,6 +48,11 @@ export default {
       }
     ],
     drawer: false
-    })
+    }),
+    methods: {
+      logout: () => {
+        axios.post('http://localhost:5000/api/session/logout').then()
+      }
+    },
 }
 </script>

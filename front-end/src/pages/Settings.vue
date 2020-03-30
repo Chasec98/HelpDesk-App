@@ -1,4 +1,6 @@
 <template>
+<div>
+  <Navigation/>
     <v-container>
             <v-row>
               <v-col>
@@ -7,15 +9,21 @@
                     Personal Preferences
                   </v-card-title>
                   <v-row>
-                    <v-col>
-                      <v-switch label="Dark Mode"></v-switch>
-                    </v-col>
-                    <v-col>
-                      <v-switch label="Drawer Open" value="Open"></v-switch>
+                    <v-col class="ml-2">
+                      <v-switch label="Dark Mode" v-model="$vuetify.theme.dark"></v-switch>
                     </v-col>
                   </v-row>
                 </v-card>
               </v-col>
             </v-row>
         </v-container>
+</div>
 </template>
+<script>
+import Navigation from '../components/Navigation'
+export default {
+  components:{
+    Navigation
+  }
+}
+</script>
