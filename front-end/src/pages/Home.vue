@@ -2,7 +2,9 @@
     <div>
         <Navigation/>
         <v-container>
-            <fab/>
+            <div id="fabButtons">
+                <v-btn class="mb-2 mr-2" color="blue" @click="newTicket()" fab><v-icon class="white--text">mdi-plus</v-icon></v-btn>
+            </div>
             <v-row>
                 <v-col>
                 <v-card hover color="#FC3F44">
@@ -43,14 +45,12 @@
 <script>
 import TicketOverlay from '../components/TicketOverlay.vue'
 import Navigation from '../components/Navigation'
-import fab from '../components/fab.vue'
 import axios from 'axios'
 
 export default {
     name: 'Home',
     components: {
         TicketOverlay,
-        fab,
         Navigation
     },
     data: ()=>({
@@ -86,8 +86,9 @@ export default {
             .then(response => {
             this.tickets = response.data
             this.loading = false
-            console.log(this.tickets)
-            })
+            }).catch(err=>{
+          console.log(err)
+        })
         },
         openTicket: function (num) {
             axios
@@ -95,7 +96,13 @@ export default {
                 .then(response => {
                     this.activeTicket = response.data
                     this.showTicket = true
-                })
+                }).catch(err=>{
+          console.log(err)
+        })
+        },
+        newTicket: function (){
+            this.activeTicket = {},
+            this.showTicket = true;
         }
     },
     mounted: function (){
@@ -105,3 +112,11 @@ export default {
 
 }
 </script>
+<style type='text/css'>
+    #fabButtons{
+        position: fixed;
+        bottom: 0px;
+        right: 0px;
+        z-index: 999;
+    }
+</style>

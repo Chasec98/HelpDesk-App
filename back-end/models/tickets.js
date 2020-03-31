@@ -91,7 +91,6 @@ async function createTicket(req, res){
     const tickNum = await ticks.findOne().sort({
         ticketNumber: -1
     })
-
     const newTicket = new ticks({
         ticketNumber: tickNum.ticketNumber + 1,
         callerName: req.body.callerName,
@@ -99,10 +98,9 @@ async function createTicket(req, res){
         problem: req.body.problem,
         subject: req.body.subject,
         solution: req.body.solution,
-        project: req.body.project
+        project: req.body.project,
+        assignedEng: req.session.engId
     });
-
-    console.log(newTicket)
     await newTicket.save().catch((err)=>{
         res.status(401).send(err.message)
     })
