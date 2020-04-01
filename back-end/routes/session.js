@@ -7,7 +7,8 @@ Router.get('/',async (req, res) => {
         'id':req.sessionID,
         'user':req.session.username,
         'engID':req.session.engId,
-        'validTill':req.session.expires
+        'validTill':req.session.expires,
+        'roleId':req.session.roleId
     };
     res.send(result);
 });

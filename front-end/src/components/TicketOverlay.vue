@@ -58,7 +58,7 @@
               -->
             <v-row>
             <v-col align='right'>
-                <v-btn class="ma-1">Close</v-btn>
+                <v-btn class="ma-1" v-show="activeTicket.ticketNumber" @click="closeTicket()">Close Ticket</v-btn>
                 <v-btn class="ma-1" color="primary" @click="updateTicket()">Save</v-btn>
             </v-col>
             </v-row>
@@ -78,9 +78,20 @@ export default {
     props: ['activeTicket','showTicket'],
     methods:{
       updateTicket: function(){
+        if(this.activeTicket.ticketNumber == undefined){
+          axios.post('http://localhost:5000/api/tickets/',this.activeTicket)
+        }
+        else{
         axios
           .put('http://localhost:5000/api/tickets/'+this.activeTicket.ticketNumber,this.activeTicket)
           .then(this.showTicket = false)
+        }
+      },
+      closeTicket: function(){
+        console.log(this.activeTicket)
+        var time = new Date()
+        this.activeTicket.closedAt = time
+        this.updateTicket()
       }
     },
     mounted: function (){

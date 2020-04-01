@@ -41,6 +41,9 @@ app.use('/api/session',sessionRoute)
 const users = require('./routes/users')
 app.use('/api/users',users)
 
+const roles = require('./routes/roles')
+app.use('/api/roles',roles)
+
 //start app
 const port = 5000
 app.listen(5000)

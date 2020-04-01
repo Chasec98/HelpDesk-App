@@ -9,7 +9,9 @@ async function login(req,res){
     if(user.password == req.body.password){
         req.session.username = user.username
         req.session.engId = user.engId;
+        req.session.roleId = user.roleId;
         res.send(user.username)
+        console.log(user.username+' logged in')
     }
     else{
         res.send("password incorrect")
@@ -18,9 +20,8 @@ async function login(req,res){
 }
 
 async function logout(req,res){
-    console.log('loggin out')
+    console.log(req.session.username+' logged out')
     req.session.destroy()
-    res.send('logged out')
 }
 
 module.exports = {

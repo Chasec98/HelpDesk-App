@@ -7,6 +7,7 @@ import Settings from '../pages/Settings.vue'
 import Login from '../pages/Login.vue'
 import Profile from '../pages/Profile.vue'
 import Dashboard from '../pages/Dashboard.vue'
+//import verifyLogin from './verify'
 
 Vue.use(VueRouter)
 
@@ -45,5 +46,25 @@ const routes = [
 const router = new VueRouter({
   routes
 })
+
+/*
+router.beforeEach((to,from,next)=>{
+  if(to.name == 'login'){
+    next()
+  }
+  else{
+    verifyLogin().then(response => {
+      if(response){
+        next()
+      }
+      else{
+        next({name:'login'})
+      }
+    })
+  }
+})
+
+*/
+
 
 export default router

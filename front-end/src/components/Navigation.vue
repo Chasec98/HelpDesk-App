@@ -16,7 +16,23 @@
         <v-spacer></v-spacer>
         <v-text-field hide-details prepend-icon="mdi-magnify" single-line placeholder="Search"></v-text-field>
         <v-spacer></v-spacer>
-        <v-btn @click="logout()" href='/#/login' color="blue">Logout</v-btn>
+        <v-speed-dial
+        direction="bottom"
+        :open-on-hover="true"
+      >
+        <template v-slot:activator>
+          <v-avatar
+            color="blue"
+            dark
+            fab
+          >{{initials}}
+          </v-avatar>
+        </template>
+        <v-btn dark small fab color="blue"><v-icon>mdi-lightbulb</v-icon></v-btn>
+        <v-btn @click="logout()" fab dark small color="red">
+          <v-icon>mdi-logout</v-icon>
+        </v-btn>
+      </v-speed-dial>
       </v-app-bar>
     </div>
 </template>
@@ -26,33 +42,34 @@ import axios from 'axios';
 export default {
     name:'Navigation',
     data: ()=>({
-        headers: [{
-        title: 'Home',
-        icon: 'mdi-home',
-        link: '/'
-      },
-      {
-        title: 'Dashboard',
-        icon: 'mdi-view-dashboard',
-        link: '/dashboard'
-      },
-      {
-        title: 'Profile',
-        icon: 'mdi-account',
-        link: '/profile'
-      },
-      {
-        title: 'Settings',
-        icon: 'mdi-settings',
-        link: '/settings'
-      }
-    ],
-    drawer: false
+        headers: [],
+        initials: "",
+        drawer: false
     }),
     methods: {
       logout: () => {
-        axios.post('http://localhost:5000/api/session/logout').then()
+        axios.post('http://localhost:5000/api/session/logout').then().catch(err=>{
+          console.log(err)
+        })
+      },
+      getInitials: function(){
+        axios.get('http://localhost:5000/api/users').then(response=>{
+          this.initials = response.data.fname.charAt(0).toUpperCase()+response.data.lname.charAt(0).toUpperCase()
+        }).catch(err=>{
+          console.log(err)
+        })
+      },
+      getRoles: function(){
+        axios.get('http://localhost:5000/api/roles').then(response=>{
+        this.headers = response.data.pages;
+      }).catch(err=>{
+          console.log(err)
+        })
       }
+    },
+    mounted() {
+      this.getRoles()
+      this.getInitials()
     },
 }
 </script>

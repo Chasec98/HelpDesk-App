@@ -18,6 +18,7 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 import axios from 'axios'
+import verifyLogin from '../router/verify'
 axios.defaults.withCredentials = true
 export default {
     name: 'Login',
@@ -31,7 +32,7 @@ export default {
             axios.post('http://localhost:5000/api/session/login',{
                 "username": this.user,
                 "password": this.pass
-            }).then(this.$router.push({path: '/'}))
+            })
         }
     }
 }

@@ -29,26 +29,56 @@ const users = new mongoose.Schema({
         type: Boolean,
         required: true,
         default: false
+    },
+    roleId:{
+        type: Number,
+        required: true,
+        default: 1
     }
 })
 
 let us = mongoose.model('users',users)
 /////////////////////////////////////////////
 //CRUD functions
-async function getSelf(req,res){
 
+async function getUsers(req,res){
+    let users = await us.find({})
+    for(var i = 0; i < users.length; i++){
+        users[i]['password'] = '';
+    }
+    res.json(users)
 }
 
-async function getPrefs(req,res){
+async function getUser(req,res){
     let user = await us.findOne({
-        username: req.session.username    
+        engId: req.session.engId
     })
-    user = JSON.stringify(user)
-    user = JSON.parse(user)
-    res.json(user['preferences'])
+    user['password'] = ""
+    res.json(user);
+}
+
+async function createUser(req,res){
+    const userID = await us.findOne().sort({
+        engId: -1
+    });
+
+    const newUser = new us({
+        fname: req.body.fname,
+        lname: req.body.lname,
+        engId: userID.engId + 1,
+        username: req.body.username,
+        password: req.body.password,
+        manager: req.body.manager
+    });
+
+    await newUser.save().catch((err)=>{
+        res.status(401).send(err.message)
+    }).then(res.status(201).json(newUser));
+
 }
 
 module.exports = {
-    getSelf:getSelf,
-    getPrefs:getPrefs
+    createUser:createUser,
+    getUsers:getUsers,
+    getUser:getUser
 }
