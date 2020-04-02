@@ -15,7 +15,8 @@ const users = new mongoose.Schema({
     },
     username: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password:{
         type: String,
@@ -34,6 +35,16 @@ const users = new mongoose.Schema({
         type: Number,
         required: true,
         default: 1
+    },
+    active:{
+        type: Boolean,
+        required: true,
+        default: true
+    },
+    paging:{
+        type: Boolean,
+        required: true,
+        default: false
     }
 })
 
@@ -41,8 +52,28 @@ let us = mongoose.model('users',users)
 /////////////////////////////////////////////
 //CRUD functions
 
+async function updateUser(req,res){
+    let user = await us.findOne({
+        engId: req.params.userId
+    })
+    for(let b in req.body){
+        if(b == 'password'){
+            continue;
+        }
+        user[b] = req.body[b]
+    }
+    if(req.body['password'] != ''){
+        user['password'] = req.body['password']
+    }
+    user.__v = user.__v + 1
+    user.save()
+    res.json(user)
+}
+
 async function getUsers(req,res){
-    let users = await us.find({})
+    let users = await us.find({
+        active: true
+    })
     for(var i = 0; i < users.length; i++){
         users[i]['password'] = '';
     }
@@ -77,8 +108,21 @@ async function createUser(req,res){
 
 }
 
+async function deactivateUser(req,res){
+    const userID = await us.findOne({
+        engId: req.params.engId
+    })
+
+    userID.active = false;
+    userID.save()
+    this.getUser(req,res)
+
+}
+
 module.exports = {
     createUser:createUser,
     getUsers:getUsers,
-    getUser:getUser
+    getUser:getUser,
+    deactivateUser:deactivateUser,
+    updateUser:updateUser
 }
