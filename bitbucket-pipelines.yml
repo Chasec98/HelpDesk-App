@@ -9,23 +9,39 @@ pipelines:
     branches:
       master:
         - step:
+            name: "build containers"
             services:
               - docker
             script:
-              - export IMAGE_NAME=chasec98/helpdesk-api:$BITBUCKET_COMMIT
-              - docker build -t $IMAGE_NAME ./back-end/.
+              - export API_IMAGE_NAME=chasec98/helpdesk-api:$BITBUCKET_COMMIT
+              - export API_IMAGE_N=chasec98/helpdesk-api
+              - export VUE_IMAGE_NAME=chasec98/helpdesk-vue:$BITBUCKET_COMMIT
+              - export VUE_IMAGE_N=chasec98/helpdesk-vue
+              - docker build -t $API_IMAGE_NAME ./back-end/.
+              - docker build -t $API_IMAGE_N ./back-end/.
+              - docker build -t $VUE_IMAGE_NAME ./front-end/.
+              - docker build -t $VUE_IMAGE_N ./front-end/.
               - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
-              - docker push $IMAGE_NAME
+              - docker push $API_IMAGE_NAME
+              - docker push $API_IMAGE_N
+              - docker push $VUE_IMAGE_NAME
+              - docker push $VUE_IMAGE_N
         - step:
-                services:
-                  - docker
-                script:
-                  - export IMAGE_NAME=chasec98/helpdesk-vue:$BITBUCKET_COMMIT
-                  - docker build -t $IMAGE_NAME ./front-end/.
-                  - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
-                  - docker push $IMAGE_NAME
+            name: "prep AWS"
+            script: 
+              - zip -r docker-multicontainer-v2.zip Dockerrun.aws.json
+            artifacts:
+              - docker-multicontainer-v2.zip
         - step:
-            name: Deploy to test
-            deployment: test
+            name: "deploy to AWS"
             script:
-              - echo "Deploying to test environment"
+              - pipe: atlassian/aws-elasticbeanstalk-deploy:0.5.2
+                variables: 
+                  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                  AWS_DEFAULT_REGION: 'us-east-2'
+                  APPLICATION_NAME: 'Helpdesk-App'
+                  ENVIRONMENT_NAME: 'HelpdeskApp-env'
+                  ZIP_FILE: 'docker-multicontainer-v2.zip'
+                  WAIT: 'true'
+                    
