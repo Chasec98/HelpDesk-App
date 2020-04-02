@@ -6,4 +6,8 @@ router.get('/',(req,res)=>{
     roleModel.getRole(req,res)
 })
 
+router.get('/all',(req,res)=>{
+    roleModel.getRoles(req,res)
+})
+
 module.exports = router;

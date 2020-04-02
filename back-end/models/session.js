@@ -6,7 +6,7 @@ async function login(req,res){
     let user = await usersCollection.findOne({
         username: req.body.username
     })
-    if(user.password == req.body.password){
+    if(user.password == req.body.password && user.active == true){
         req.session.username = user.username
         req.session.engId = user.engId;
         req.session.roleId = user.roleId;

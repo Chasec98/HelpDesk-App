@@ -1,0 +1,26 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+        {
+            "name": "back",
+            "image" : "chasec98/helpdesk-api",
+            "hostname": "back",
+            "essential": true,
+            "memory": 128
+        },
+        {
+            "name": "front",
+            "image": "chasec98/helpdesk-vue",
+            "hostname":"front",
+            "essential": false,
+            "memory": 128,
+            "portMappings":[
+                {
+                    "hostPort": 80,
+                    "containerPort": 80
+                }
+            ],
+            "links":["back"]
+        }
+    ]
+}
