@@ -6,25 +6,26 @@
 image: atlassian/default-image:2
 
 pipelines:
-  default:
-    - step:
-        services:
-          - docker
-        script:
-          - export IMAGE_NAME=chasec98/helpdesk-api:$BITBUCKET_COMMIT
-          - docker build -t $IMAGE_NAME ./back-end/.
-          - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
-          - docker push $IMAGE_NAME
-    - step:
+    branches:
+      master:
+        - step:
             services:
               - docker
             script:
-              - export IMAGE_NAME=chasec98/helpdesk-vue:$BITBUCKET_COMMIT
-              - docker build -t $IMAGE_NAME ./front-end/.
+              - export IMAGE_NAME=chasec98/helpdesk-api:$BITBUCKET_COMMIT
+              - docker build -t $IMAGE_NAME ./back-end/.
               - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
               - docker push $IMAGE_NAME
-    - step:
-        name: Deploy to test
-        deployment: test
-        script:
-          - echo "Deploying to test environment"
+        - step:
+                services:
+                  - docker
+                script:
+                  - export IMAGE_NAME=chasec98/helpdesk-vue:$BITBUCKET_COMMIT
+                  - docker build -t $IMAGE_NAME ./front-end/.
+                  - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
+                  - docker push $IMAGE_NAME
+        - step:
+            name: Deploy to test
+            deployment: test
+            script:
+              - echo "Deploying to test environment"
