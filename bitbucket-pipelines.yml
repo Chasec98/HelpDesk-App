@@ -43,5 +43,6 @@ pipelines:
                   APPLICATION_NAME: 'Helpdesk-App'
                   ENVIRONMENT_NAME: 'HelpdeskApp-env'
                   ZIP_FILE: 'docker-multicontainer-v2.zip'
+                  S3_BUCKET: 'elasticbeanstalk-us-east-2-648945325411'
                   WAIT: 'true'
                     
