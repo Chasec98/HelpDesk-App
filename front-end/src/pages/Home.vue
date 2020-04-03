@@ -87,7 +87,7 @@ export default {
             this.tickets = response.data
             this.loading = false
             }).catch(err=>{
-          console.log(err)
+          this.$router.push({name:'login'})
         })
         },
         openTicket: function (num) {

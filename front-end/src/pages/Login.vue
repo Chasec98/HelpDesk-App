@@ -32,8 +32,10 @@ export default {
             axios.post('http://localhost:5000/api/session/login',{
                 "username": this.user,
                 "password": this.pass
-            }).then(()=>{
-                this.$router.push({name:'home'})
+            }).then(resp=>{
+                if(resp.status == 200){
+                    this.$router.push({name:'home'})
+                }
             })
         }
     }

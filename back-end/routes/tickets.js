@@ -3,6 +3,10 @@ const router = express.Router()
 const ticketModel = require('../models/tickets')
 const tickets = ticketModel.mong
 
+router.get('/all',(req,res)=>{
+    ticketModel.getAllTickets(req,res);
+})
+
 router.get('/:ticketNumber', async (req, res) => {
     res.json(await ticketModel.getTicket(req.params.ticketNumber))
 })

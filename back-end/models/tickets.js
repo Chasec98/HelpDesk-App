@@ -59,6 +59,11 @@ let ticks = mongoose.model('tickets', tickets)
 /////////////////////////////////////////////////
 
 //CRUD functions
+
+async function getAllTickets(req,res){
+    res.json(await ticks.find({}))
+}
+
 async function getTicket(num){
     let t = await ticks.findOne({
         ticketNumber: num
@@ -127,5 +132,6 @@ module.exports = {
     getTicket: getTicket,
     deleteTicket: deleteTicket,
     updateTicket: updateTicket,
-    createTicket:createTicket
+    createTicket:createTicket,
+    getAllTickets: getAllTickets
 }

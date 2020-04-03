@@ -14,7 +14,7 @@ async function login(req,res){
         console.log(user.username+' logged in')
     }
     else{
-        res.send("password incorrect")
+        res.status(401).send("password incorrect")
         console.log('incorrect login')
     }
 }
