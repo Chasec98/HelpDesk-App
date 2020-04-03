@@ -79,11 +79,11 @@ export default {
     methods:{
       updateTicket: function(){
         if(this.activeTicket.ticketNumber == undefined){
-          axios.post('http://localhost:5000/api/tickets/',this.activeTicket)
+          axios.post('http://helpdesk.ccarter98.com/api/tickets/',this.activeTicket)
         }
         else{
         axios
-          .put('http://localhost:5000/api/tickets/'+this.activeTicket.ticketNumber,this.activeTicket)
+          .put('http://helpdesk.ccarter98.com/api/tickets/'+this.activeTicket.ticketNumber,this.activeTicket)
           .then(this.showTicket = false)
         }
       },

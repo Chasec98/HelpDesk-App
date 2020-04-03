@@ -82,7 +82,7 @@ export default {
     methods: {
         getData: function () {
         axios
-            .get('http://localhost:5000/api/tickets')
+            .get('http://helpdesk.ccarter98.com/api/tickets')
             .then(response => {
             this.tickets = response.data
             this.loading = false
@@ -92,7 +92,7 @@ export default {
         },
         openTicket: function (num) {
             axios
-                .get('http://localhost:5000/api/tickets/'+num.ticketNumber)
+                .get('http://helpdesk.ccarter98.com/api/tickets/'+num.ticketNumber)
                 .then(response => {
                     this.activeTicket = response.data
                     this.showTicket = true

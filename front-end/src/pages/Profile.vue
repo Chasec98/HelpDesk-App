@@ -71,15 +71,15 @@
         },
         methods: {
             deleteUser: function (userId) {
-                axios.post('http://localhost:5000/api/users/delete/' + userId).then(this.getData).catch()
+                axios.post('http://helpdesk.ccarter98.com/api/users/delete/' + userId).then(this.getData).catch()
             },
             getData: function () {
-                axios.get('http://localhost:5000/api/users/all').then(response => {
+                axios.get('http://helpdesk.ccarter98.com/api/users/all').then(response => {
                     this.userData = response.data;
                 })
             },
             updateUser: function(user){
-                axios.put('http://localhost:5000/api/users/'+user.engId,user).then(this.getData).catch()
+                axios.put('http://helpdesk.ccarter98.com/api/users/'+user.engId,user).then(this.getData).catch()
             },
             newUser: function () {
                 this.activeUser = {},

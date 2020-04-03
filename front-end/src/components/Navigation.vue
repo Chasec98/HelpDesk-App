@@ -48,19 +48,19 @@ export default {
     }),
     methods: {
       logout: () => {
-        axios.post('http://localhost:5000/api/session/logout').then().catch(err=>{
+        axios.post('http://helpdesk.ccarter98.com/api/session/logout').then().catch(err=>{
           console.log(err)
         })
       },
       getInitials: function(){
-        axios.get('http://localhost:5000/api/users').then(response=>{
+        axios.get('http://helpdesk.ccarter98.com/api/users').then(response=>{
           this.initials = response.data.fname.charAt(0).toUpperCase()+response.data.lname.charAt(0).toUpperCase()
         }).catch(err=>{
           console.log(err)
         })
       },
       getRoles: function(){
-        axios.get('http://localhost:5000/api/roles').then(response=>{
+        axios.get('http://helpdesk.ccarter98.com/api/roles').then(response=>{
         this.headers = response.data.pages;
       }).catch(err=>{
           console.log(err)
