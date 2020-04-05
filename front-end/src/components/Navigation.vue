@@ -48,7 +48,9 @@ export default {
     }),
     methods: {
       logout: () => {
-        axios.post('http://localhost:5000/api/session/logout').then().catch(err=>{
+        axios.post('http://localhost:5000/api/session/logout').then(()=>{
+          this.$cookies.keys().forEach(cookie => this.$cookies.remove(cookie))
+        }).catch(err=>{
           console.log(err)
         })
       },

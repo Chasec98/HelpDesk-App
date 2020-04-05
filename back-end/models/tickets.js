@@ -39,6 +39,10 @@ const tickets = new mongoose.Schema({
     },
     assignedEng: {
         type: Number,
+        required: true
+    },
+    escalationEng: {
+        type: Number,
         required: false
     },
     nextSteps: {

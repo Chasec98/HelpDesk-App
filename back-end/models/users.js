@@ -26,11 +26,6 @@ const users = new mongoose.Schema({
         type: Object,
         required: false
     },
-    manager:{
-        type: Boolean,
-        required: true,
-        default: false
-    },
     roleId:{
         type: Number,
         required: true,
@@ -99,7 +94,7 @@ async function createUser(req,res){
         engId: userID.engId + 1,
         username: req.body.username,
         password: req.body.password,
-        manager: req.body.manager
+        roleId: req.body.roleId
     });
 
     await newUser.save().catch((err)=>{

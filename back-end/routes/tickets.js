@@ -35,7 +35,10 @@ router.get('/', async (req, res) => {
                     $gte: now.toISOString()
                 },
                 project: false,
-                assignedEng: req.session.engId
+                $or:[
+                    {assignedEng: req.session.engId},
+                    {escalationEng: req.session.engId}
+                ]
             })),
             //add 7 day query
             sevenDays: addAge(await tickets.find({
@@ -48,7 +51,10 @@ router.get('/', async (req, res) => {
             project: addAge(await tickets.find({
                 closedAt: null,
                 project: true,
-                assignedEng: req.session.engId
+                $or:[
+                    {assignedEng: req.session.engId},
+                    {escalationEng: req.session.engId}
+                ]
             }))
         }
         res.json(ticks)

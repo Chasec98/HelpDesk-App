@@ -11,8 +11,12 @@
                     <v-card-title>
                     Tickets Over 7 Days
                     </v-card-title>
-                    <v-data-table :loading="loading" dense :headers="headers" :items="tickets.sevenDays" item-key="name"
-                    no-data-text="No tickets over 7 days :)" class="elevation-1" @click:row="openTicket"></v-data-table>
+                    <v-data-table :loading="loading" dense :headers="headersAssigned" :items="tickets.sevenDays" item-key="name"
+                    no-data-text="No tickets over 7 days :)" class="elevation-1" @click:row="openTicket">
+                    <template v-slot:item.assignedEng="{ assignedEng }">
+                        {{getUsersName(assignedEng)}}
+                    </template>
+                    </v-data-table>
                 </v-card>
                 </v-col>
             </v-row>
@@ -72,9 +76,32 @@ export default {
         value: 'age'
       }
     ],
+    headersAssigned: [{
+        text: 'Ticket Number',
+        align: 'left',
+        value: 'ticketNumber'
+      },
+      {
+          text: 'Assignee',
+          value: 'assignedEng'
+      },
+      {
+        text: 'Contact',
+        value: 'callerName'
+      },
+      {
+        text: 'Subject',
+        value: 'subject'
+      },
+      {
+        text: 'Age',
+        value: 'age'
+      }
+    ],
     tickets: [],
     projects: [],
     stats: [],
+    users: [],
     showTicket: false,
     activeTicket: {},
     loading: true
@@ -88,7 +115,10 @@ export default {
             this.loading = false
             }).catch(err=>{
           this.$router.push({name:'login'})
-        })
+        });
+        axios.get('http://localhost:5000/api/users/all').then(response => {
+            this.users = response.data;
+        });
         },
         openTicket: function (num) {
             axios
@@ -103,6 +133,13 @@ export default {
         newTicket: function (){
             this.activeTicket = {},
             this.showTicket = true;
+        },
+        getUsersName: function(id){
+            for(var i = 0; i < this.users.length; i++){
+                if(this.users[i].id == id){
+                    return this.users[i].fname+' '+this.users[i].lname
+                }
+            }
         }
     },
     mounted: function (){

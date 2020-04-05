@@ -13,10 +13,10 @@
             </v-row>
             <v-row>
             <v-col v-show="activeTicket.createdAt">
-                <h3>Created: </h3><p>{{activeTicket.createdAt}}</p>
+                <h3>Created: </h3><p>{{getDateTime(activeTicket.createdAt)}}</p>
                 </v-col>
                 <v-col v-show="activeTicket.closedAt">
-                <h3>Closed: </h3><p>{{activeTicket.closedAt}}</p>
+                <h3>Closed: </h3><p>{{getDateTime(activeTicket.closedAt)}}</p>
                 </v-col>
             </v-row>
                           <v-row>
@@ -79,7 +79,9 @@ export default {
     methods:{
       updateTicket: function(){
         if(this.activeTicket.ticketNumber == undefined){
-          axios.post('http://localhost:5000/api/tickets/',this.activeTicket)
+          axios.post('http://localhost:5000/api/tickets/',this.activeTicket).then(()=>{
+            this.showTicket = false
+          })
         }
         else{
         axios
@@ -92,6 +94,10 @@ export default {
         var time = new Date()
         this.activeTicket.closedAt = time
         this.updateTicket()
+      },
+      getDateTime: function(datetime){
+        let t = new Date(datetime)
+        return t.toLocaleDateString() + ' ' + t.toLocaleTimeString()
       }
     },
     mounted: function (){
