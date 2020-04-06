@@ -6,7 +6,7 @@ async function login(req,res){
     let user = await usersCollection.findOne({
         username: req.body.username
     })
-    if(user.password == req.body.password){
+    if(user.password == req.body.password && user.active == true){
         req.session.username = user.username
         req.session.engId = user.engId;
         req.session.roleId = user.roleId;
@@ -14,7 +14,7 @@ async function login(req,res){
         console.log(user.username+' logged in')
     }
     else{
-        res.send("password incorrect")
+        res.status(401).send("password incorrect")
         console.log('incorrect login')
     }
 }

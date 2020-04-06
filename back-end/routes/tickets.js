@@ -3,6 +3,10 @@ const router = express.Router()
 const ticketModel = require('../models/tickets')
 const tickets = ticketModel.mong
 
+router.get('/all',(req,res)=>{
+    ticketModel.getAllTickets(req,res);
+})
+
 router.get('/:ticketNumber', async (req, res) => {
     res.json(await ticketModel.getTicket(req.params.ticketNumber))
 })
@@ -31,7 +35,10 @@ router.get('/', async (req, res) => {
                     $gte: now.toISOString()
                 },
                 project: false,
-                assignedEng: req.session.engId
+                $or:[
+                    {assignedEng: req.session.engId},
+                    {escalationEng: req.session.engId}
+                ]
             })),
             //add 7 day query
             sevenDays: addAge(await tickets.find({
@@ -44,7 +51,10 @@ router.get('/', async (req, res) => {
             project: addAge(await tickets.find({
                 closedAt: null,
                 project: true,
-                assignedEng: req.session.engId
+                $or:[
+                    {assignedEng: req.session.engId},
+                    {escalationEng: req.session.engId}
+                ]
             }))
         }
         res.json(ticks)

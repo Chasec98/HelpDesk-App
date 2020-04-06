@@ -29,7 +29,7 @@
           </v-avatar>
         </template>
         <v-btn dark small fab color="blue"><v-icon>mdi-lightbulb</v-icon></v-btn>
-        <v-btn @click="logout()" fab dark small color="red">
+        <v-btn href="/#/login" @click="logout()" fab dark small color="red">
           <v-icon>mdi-logout</v-icon>
         </v-btn>
       </v-speed-dial>
@@ -48,7 +48,9 @@ export default {
     }),
     methods: {
       logout: () => {
-        axios.post('http://localhost:5000/api/session/logout').then().catch(err=>{
+        axios.post('http://localhost:5000/api/session/logout').then(()=>{
+          this.$cookies.keys().forEach(cookie => this.$cookies.remove(cookie))
+        }).catch(err=>{
           console.log(err)
         })
       },

@@ -17,4 +17,12 @@ Router.post('/new', async(req,res)=>{
     usersModel.createUser(req,res);
 })
 
+Router.put('/:userId', async(req,res)=>{
+    usersModel.updateUser(req,res);
+})
+
+Router.post('/delete/:engId',(req,res)=>{
+    usersModel.deactivateUser(req,res);
+})
+
 module.exports = Router

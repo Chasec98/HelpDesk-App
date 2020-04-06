@@ -1,0 +1,48 @@
+# This is a sample build configuration for Docker.
+# Check our guides at https://confluence.atlassian.com/x/O1toN for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: atlassian/default-image:2
+
+pipelines:
+    branches:
+      master:
+        - step:
+            name: "build containers"
+            services:
+              - docker
+            script:
+              - export API_IMAGE_NAME=chasec98/helpdesk-api:$BITBUCKET_COMMIT
+              - export API_IMAGE_N=chasec98/helpdesk-api
+              - export VUE_IMAGE_NAME=chasec98/helpdesk-vue:$BITBUCKET_COMMIT
+              - export VUE_IMAGE_N=chasec98/helpdesk-vue
+              - docker build -t $API_IMAGE_NAME ./back-end/.
+              - docker build -t $API_IMAGE_N ./back-end/.
+              - docker build -t $VUE_IMAGE_NAME ./front-end/.
+              - docker build -t $VUE_IMAGE_N ./front-end/.
+              - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
+              - docker push $API_IMAGE_NAME
+              - docker push $API_IMAGE_N
+              - docker push $VUE_IMAGE_NAME
+              - docker push $VUE_IMAGE_N
+        - step:
+            name: "prep AWS"
+            script: 
+              - zip -r docker-multicontainer-v2.zip Dockerrun.aws.json
+            artifacts:
+              - docker-multicontainer-v2.zip
+        - step:
+            name: "deploy to AWS"
+            script:
+              - pipe: atlassian/aws-elasticbeanstalk-deploy:0.5.2
+                variables: 
+                  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                  AWS_DEFAULT_REGION: 'us-east-2'
+                  APPLICATION_NAME: 'Helpdesk-App'
+                  ENVIRONMENT_NAME: 'HelpdeskApp-env'
+                  ZIP_FILE: 'docker-multicontainer-v2.zip'
+                  S3_BUCKET: 'elasticbeanstalk-us-east-2-648945325411'
+                  WAIT: 'true'
+                    
