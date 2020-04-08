@@ -115,9 +115,9 @@ async function deactivateUser(req,res){
 }
 
 module.exports = {
-    createUser:createUser,
-    getUsers:getUsers,
-    getUser:getUser,
-    deactivateUser:deactivateUser,
-    updateUser:updateUser
+    createUser,
+    getUsers,
+    getUser,
+    deactivateUser,
+    updateUser
 }

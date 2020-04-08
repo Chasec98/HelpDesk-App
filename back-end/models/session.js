@@ -6,16 +6,21 @@ async function login(req,res){
     let user = await usersCollection.findOne({
         username: req.body.username
     })
-    if(user.password == req.body.password && user.active == true){
-        req.session.username = user.username
-        req.session.engId = user.engId;
-        req.session.roleId = user.roleId;
-        res.send(user.username)
-        console.log(user.username+' logged in')
+    if(user == undefined){
+        res.send(401).send("user not found")
     }
     else{
-        res.status(401).send("password incorrect")
-        console.log('incorrect login')
+        if(user.password == req.body.password && user.active == true){
+            req.session.username = user.username
+            req.session.engId = user.engId;
+            req.session.roleId = user.roleId;
+            res.send(user.username)
+            console.log(user.username+' logged in')
+        }
+        else{
+            res.status(401).send("password incorrect")
+            console.log('incorrect login')
+        }
     }
 }
 

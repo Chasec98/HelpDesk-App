@@ -29,6 +29,9 @@ app.use(session({
   }))
 app.use(verifyLogin)
 //Routes
+const customers = require('./routes/customers')
+app.use('/api/customers',customers);
+
 const tickets = require('./routes/tickets')
 app.use('/api/tickets', tickets)
 

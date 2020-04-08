@@ -18,9 +18,9 @@ const tickets = new mongoose.Schema({
         type: String,
         required: false
     },
-    callerName: {
+    customerId: {
         type: String,
-        required: false,
+        required: true,
         default: null
     },
     createdAt: {
@@ -102,7 +102,7 @@ async function createTicket(req, res){
     })
     const newTicket = new ticks({
         ticketNumber: tickNum.ticketNumber + 1,
-        callerName: req.body.callerName,
+        customerId: req.body.customerId,
         assignedEng: req.body.assignedEng,
         problem: req.body.problem,
         subject: req.body.subject,
