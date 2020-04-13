@@ -31,7 +31,7 @@
         props: ['showUser','roleData'],
         methods: {
             createUser: function () {
-                axios.post('http://helpdesk.ccarter98.com/api/users/new',this.activeUser).then(()=>{
+                axios.post('http://localhost:5000/api/users/new',this.activeUser).then(()=>{
                     this.showUser = false;
                 }).catch()
             }

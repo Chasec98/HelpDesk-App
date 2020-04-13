@@ -47,7 +47,7 @@ export default {
     },
     methods:{
         getStats: function (){
-            axios.get('http://helpdesk.ccarter98.com/api/stats/numClosed').then(response=>{
+            axios.get('http://localhost:5000/api/stats/numClosed').then(response=>{
                 this.stats = response.data;
             })
         }

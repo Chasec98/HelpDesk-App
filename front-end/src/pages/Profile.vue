@@ -70,7 +70,7 @@
         },
         methods: {
             deleteUser: function (userId) {
-                axios.post('http://helpdesk.ccarter98.com/api/users/delete/' + userId).then(this.getData).catch()
+                axios.post('http://localhost:5000/api/users/delete/' + userId).then(this.getData).catch()
             },
             getData: function () {
                 axios.get('http://localhost:5000/api/users').then(response => {
@@ -84,7 +84,7 @@
                 })
             },
             updateUser: function(user){
-                axios.put('http://helpdesk.ccarter98.com/api/users/'+user.engId,user).then(this.getData).catch()
+                axios.put('http://localhost:5000/api/users/'+user.engId,user).then(this.getData).catch()
             },
             newUser: function () {
                 this.activeUser = {},

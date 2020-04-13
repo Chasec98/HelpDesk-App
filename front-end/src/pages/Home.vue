@@ -117,7 +117,7 @@ export default {
     methods: {
         getData: function () {
         axios
-            .get('http://helpdesk.ccarter98.com/api/tickets')
+            .get('http://localhost:5000/api/tickets')
             .then(response => {
                 localStorage.tickets = response.data
             this.tickets = response.data
@@ -134,7 +134,7 @@ export default {
         },
         openTicket: function (num) {
             axios
-                .get('http://helpdesk.ccarter98.com/api/tickets/'+num.ticketNumber)
+                .get('http://localhost:5000/api/tickets/'+num.ticketNumber)
                 .then(response => {
                     this.activeTicket = response.data
                     this.showTicket = true
