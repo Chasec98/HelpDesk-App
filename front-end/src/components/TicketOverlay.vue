@@ -92,7 +92,7 @@ export default {
         }
         else{
         axios
-          .put('http://localhost:5000/api/tickets/'+this.activeTicket.ticketNumber,this.activeTicket)
+          .put('http://helpdesk.ccarter98.com/api/tickets/'+this.activeTicket.ticketNumber,this.activeTicket)
           .then(this.showTicket = false)
         }
         this.$router.go()
