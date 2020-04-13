@@ -25,10 +25,10 @@
             color="blue"
             dark
             fab
-          >{{initials}}
+          >{{user.fname.charAt(0).toUpperCase()+user.lname.charAt(0).toUpperCase()}}
           </v-avatar>
         </template>
-        <v-btn dark small fab color="blue"><v-icon>mdi-lightbulb</v-icon></v-btn>
+        <v-btn @click="togglePaging()" dark small fab color="blue"><v-icon>{{user.paging ? "mdi-lightbulb" : "mdi-lightbulb-outline"}}</v-icon></v-btn>
         <v-btn href="/#/login" @click="logout()" fab dark small color="red">
           <v-icon>mdi-logout</v-icon>
         </v-btn>
@@ -43,7 +43,7 @@ export default {
     name:'Navigation',
     data: ()=>({
         headers: [],
-        initials: "",
+        user: {},
         drawer: false
     }),
     methods: {
@@ -54,10 +54,16 @@ export default {
           console.log(err)
         })
       },
-      getInitials: function(){
+      getUser: function(){
         axios.get('http://localhost:5000/api/users').then(response=>{
-          this.initials = response.data.fname.charAt(0).toUpperCase()+response.data.lname.charAt(0).toUpperCase()
+          this.user = response.data
         }).catch(err=>{
+          console.log(err)
+        })
+      },
+      togglePaging: function(){
+        this.user.paging = !this.user.paging
+        axios.put('http://localhost:5000/api/users/'+this.user.engId,this.user).then().catch(err=>{
           console.log(err)
         })
       },
@@ -71,7 +77,7 @@ export default {
     },
     mounted() {
       this.getRoles()
-      this.getInitials()
+      this.getUser()
     },
 }
 </script>

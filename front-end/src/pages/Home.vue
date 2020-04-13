@@ -16,6 +16,9 @@
                     <template v-slot:item.assignedEng="{ assignedEng }">
                         {{getUsersName(assignedEng)}}
                     </template>
+                    <template v-slot:item.customerId="{ item }">
+                    {{getCustomerName(item.customerId)}}
+                    </template>
                     </v-data-table>
                 </v-card>
                 </v-col>
@@ -26,6 +29,9 @@
                     <v-card-title>My Open Tickets</v-card-title>
                     <v-data-table :loading="loading" dense :headers="headers" :items="tickets.open" class="elevation-1"
                     no-data-text="No open tickets" @click:row="openTicket">
+                    <template v-slot:item.customerId="{ item }">
+                    {{getCustomerName(item.customerId)}}
+                    </template>
                     </v-data-table>
                 </v-card>
                 </v-col>
@@ -42,7 +48,7 @@
                 </v-col>
             </v-row>
         </v-container>
-        <TicketOverlay v-bind:showTicket="showTicket" v-bind:activeTicket="activeTicket"></TicketOverlay>
+        <TicketOverlay v-bind:showTicket="showTicket" v-bind:activeTicket="activeTicket" v-bind:customers="customers"></TicketOverlay>
     </div>
 </template>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -50,6 +56,7 @@
 import TicketOverlay from '../components/TicketOverlay.vue'
 import Navigation from '../components/Navigation'
 import axios from 'axios'
+const db = require('../plugins/indexdb')
 
 export default {
     name: 'Home',
@@ -65,7 +72,7 @@ export default {
       },
       {
         text: 'Contact',
-        value: 'callerName'
+        value: 'customerId'
       },
       {
         text: 'Subject',
@@ -87,7 +94,7 @@ export default {
       },
       {
         text: 'Contact',
-        value: 'callerName'
+        value: 'customerId'
       },
       {
         text: 'Subject',
@@ -99,6 +106,7 @@ export default {
       }
     ],
     tickets: [],
+    customers: [],
     projects: [],
     stats: [],
     users: [],
@@ -111,6 +119,7 @@ export default {
         axios
             .get('http://localhost:5000/api/tickets')
             .then(response => {
+                localStorage.tickets = response.data
             this.tickets = response.data
             this.loading = false
             }).catch(err=>{
@@ -118,6 +127,9 @@ export default {
         });
         axios.get('http://localhost:5000/api/users/all').then(response => {
             this.users = response.data;
+        });
+        axios.get('http://localhost:5000/api/customers/all').then(response => {
+            this.customers = response.data;
         });
         },
         openTicket: function (num) {
@@ -133,6 +145,13 @@ export default {
         newTicket: function (){
             this.activeTicket = {},
             this.showTicket = true;
+        },
+        getCustomerName: function(id){
+            for(var i = 0; i < this.customers.length; i++){
+                if(this.customers[i].customerId == id){
+                    return this.customers[i].fname + ' ' + this.customers[i].lname
+                }
+            }
         },
         getUsersName: function(id){
             for(var i = 0; i < this.users.length; i++){

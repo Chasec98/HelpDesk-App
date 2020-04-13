@@ -19,7 +19,7 @@ const tickets = new mongoose.Schema({
         required: false
     },
     customerId: {
-        type: String,
+        type: Number,
         required: true,
         default: null
     },
@@ -57,6 +57,19 @@ const tickets = new mongoose.Schema({
         type: Boolean,
         required: true,
         default: false
+    },
+    hardware: {
+        type: Boolean,
+        required: false
+    },
+    software: {
+        type: Boolean,
+        required: false
+    },
+    escalation: {
+        type: Number,
+        required: true,
+        default: 1
     }
 })
 let ticks = mongoose.model('tickets', tickets)
@@ -129,6 +142,8 @@ function addAge(arr) {
     }
     return arr
 }
+
+
 //////////////////////////////////////////////////
 
 module.exports = {

@@ -62,6 +62,7 @@ async function updateUser(req,res){
     }
     user.__v = user.__v + 1
     user.save()
+    console.log("user " + req.body.username + " updated")
     res.json(user)
 }
 

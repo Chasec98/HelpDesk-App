@@ -11,6 +11,18 @@ const roles = new mongoose.Schema({
     pages: {
         type: Array,
         required: true
+    },
+    hardware: {
+        type: Boolean,
+        required: true
+    },
+    software: {
+        type: Boolean,
+        required: true
+    },
+    escalation: {
+        type: Number,
+        required: true
     }
 })
 

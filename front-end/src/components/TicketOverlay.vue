@@ -21,7 +21,14 @@
             </v-row>
                           <v-row>
                 <v-col>
-                  <v-text-field label="Contact" v-model="activeTicket.callerName"></v-text-field>
+                  <!--<v-text-field label="Contact" v-model="activeTicket.customerId"></v-text-field>-->
+                  <v-autocomplete
+                  v-model="activeTicket.customerId"
+                  item-value="customerId"
+                    :items="customers"
+                    item-text="fullName"
+                    label="Contact"
+                    ></v-autocomplete>
                 </v-col>
               </v-row>
               <v-row>
@@ -75,7 +82,7 @@ export default {
     name: 'TicketOverlay',
     data: ()=>({
     }),
-    props: ['activeTicket','showTicket'],
+    props: ['activeTicket','showTicket','customers'],
     methods:{
       updateTicket: function(){
         if(this.activeTicket.ticketNumber == undefined){
@@ -88,12 +95,14 @@ export default {
           .put('http://localhost:5000/api/tickets/'+this.activeTicket.ticketNumber,this.activeTicket)
           .then(this.showTicket = false)
         }
+        this.$router.go()
       },
       closeTicket: function(){
         console.log(this.activeTicket)
         var time = new Date()
         this.activeTicket.closedAt = time
         this.updateTicket()
+        this.$router.go()
       },
       getDateTime: function(datetime){
         let t = new Date(datetime)

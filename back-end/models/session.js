@@ -14,7 +14,7 @@ async function login(req,res){
             req.session.username = user.username
             req.session.engId = user.engId;
             req.session.roleId = user.roleId;
-            res.send(user.username)
+            res.send(user.preferences)
             console.log(user.username+' logged in')
         }
         else{

@@ -7,7 +7,6 @@ import Settings from '../pages/Settings.vue'
 import Login from '../pages/Login.vue'
 import Profile from '../pages/Profile.vue'
 import Dashboard from '../pages/Dashboard.vue'
-import Search from '../pages/Search'
 //import verifyLogin from './verify'
 
 Vue.use(VueRouter)
@@ -37,11 +36,6 @@ const routes = [
     path:'/dashboard',
     name:'dashboard',
     component: Dashboard
-  },
-  {
-    path: '/search',
-    name: 'search',
-    component: Search
   },
   {
     path: '*',

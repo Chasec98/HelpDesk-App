@@ -43,7 +43,6 @@ export default {
                     "password": this.pass
                 }).then(resp=>{
                     if(resp.status == 200){
-                        
                         this.$router.push({name:'home'})
                     }
                 }).catch(()=>{
